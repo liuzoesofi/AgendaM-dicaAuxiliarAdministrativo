@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-rose-50/40 scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auxiliar Administrativo Sanitario - Gestión de Agendas Médicas Pro</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        pinkmed: {
+                            50: '#fdf2f8',
+                            100: '#fce7f3',
+                            200: '#fbcfe8',
+                            300: '#f472b6',
+                            400: '#e879f9',
+                            500: '#ec4899',
+                            600: '#db2777',
+                            700: '#be185d',
+                            800: '#9d174d',
+                            900: '#701a3c',
+                            accent: '#e11d48'
+                        },
+                        rosegold: {
+                            100: '#fff5f5',
+                            200: '#f7d6d8',
+                            400: '#d89ba1',
+                            600: '#b76e79',
+                            800: '#7d3e47'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fdf2f8;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #f472b6;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #db2777;
+        }
+        
+        .glass-header {
+            background: rgba(255, 255, 255, 0.90);
+            backdrop-filter: blur(16px);
+        }
+
+        .pink-gradient-text {
+            background: linear-gradient(135deg, #be185d 0%, #db2777 50%, #831843 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .pink-glow {
+            box-shadow: 0 10px 30px -5px rgba(219, 39, 119, 0.28);
+        }
+
+        .hero-border-glow {
+            box-shadow: 0 0 35px 8px rgba(244, 114, 182, 0.35);
+        }
+    </style>
+</head>
+<body class="h-full text-slate-800 font-sans antialiased flex flex-col min-h-screen bg-slate-50/50">
+
+    <header class="sticky top-0 z-40 glass-header border-b border-pinkmed-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <!-- Brand / Logo -->
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-pinkmed-500 via-pinkmed-600 to-pinkmed-800 flex items-center justify-center text-white shadow-lg shadow-pinkmed-500/30">
+                        <i class="fa-solid fa-laptop-medical text-xl"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl sm:text-2xl font-extrabold pink-gradient-text tracking-tight">Agenda Médica Rosa</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] sm:text-xs font-bold text-pinkmed-700 uppercase tracking-wider">Auxiliar Administrativo Sanitario</span>
+                            <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation menu -->
+                <nav class="hidden lg:flex items-center space-x-7 text-xs font-bold uppercase tracking-wider">
+                    <a href="#perfil" class="text-pinkmed-800 hover:text-pinkmed-600 flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-user-doctor text-pinkmed-500"></i> Perfil
+                    </a>
+                    <a href="#mision-vision" class="text-slate-600 hover:text-pinkmed-600 flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-bullseye text-pinkmed-500"></i> Misión & Visión
+                    </a>
+                    <a href="#dashboard" class="text-slate-600 hover:text-pinkmed-600 flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-chart-line text-pinkmed-500"></i> Métricas
+                    </a>
+                    <a href="#agenda" class="text-slate-600 hover:text-pinkmed-600 flex items-center gap-1.5 transition">
+                        <i class="fa-regular fa-calendar-check text-pinkmed-500"></i> Gestor Citas
+                    </a>
+                    <a href="#servicios" class="text-slate-600 hover:text-pinkmed-600 flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-stethoscope text-pinkmed-500"></i> Servicios
+                    </a>
+                </nav>
+
+                <!-- Primary Action Button -->
+                <div class="flex items-center gap-3">
+                    <button onclick="openModal()" class="bg-gradient-to-r from-pinkmed-600 to-pinkmed-800 hover:from-pinkmed-700 hover:to-pinkmed-900 text-white text-xs sm:text-sm font-bold px-4 sm:px-5 py-2.5 sm:py-3 rounded-2xl shadow-lg shadow-pinkmed-600/30 hover:shadow-pinkmed-600/50 transition duration-200 flex items-center gap-2 transform active:scale-95">
+                        <i class="fa-solid fa-calendar-plus text-base"></i>
+                        <span>Agendar Cita</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <section id="perfil" class="relative overflow-hidden bg-gradient-to-b from-pinkmed-100/70 via-rose-50/50 to-white py-12 lg:py-20 border-b border-pinkmed-100">
+            <div class="absolute -top-24 -right-24 w-96 h-96 bg-pinkmed-200/40 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute bottom-0 left-10 w-80 h-80 bg-rosegold-200/40 rounded-full blur-2xl pointer-events-none"></div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="grid lg:grid-cols-12 gap-12 items-center">
+                    
+                    <!-- Text Column -->
+                    <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-pinkmed-200 text-pinkmed-800 text-xs font-bold shadow-sm uppercase tracking-wider">
+                            <i class="fa-solid fa-certificate text-pinkmed-600"></i> Auxiliar Administrativo de Oficina Médica Certificada
+                        </div>
+                        
+                        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight">
+                            Coordinación Eficiente & <span class="pink-gradient-text">Agendas Médicas</span> Humanizadas
+                        </h1>
+                        
+                        <!-- Resumen del Perfil Profesional -->
+                        <div class="bg-white/90 backdrop-blur-sm p-5 sm:p-6 rounded-3xl border border-pinkmed-100 shadow-sm text-slate-700 text-sm sm:text-base leading-relaxed text-left space-y-3">
+                            <p class="font-semibold text-slate-900">
+                                <i class="fa-solid fa-quote-left text-pinkmed-400 mr-2"></i>
+                                Profesional Administrativa en Oficina Médica con amplia experiencia en la organización, optimización y control de agendas sanitarias de alta demanda.
+                            </p>
+                            <p class="text-xs sm:text-sm text-slate-600">
+                                Especialista en el manejo fluido de historiales clínicos electrónicos (EHR/EMR), triaje de recepción presencial y telefónico, gestión de autorizaciones de seguros médicos y comunicación empática con el paciente para reducir sustancialmente el porcentaje de ausentismo en consulta.
+                            </p>
+                        </div>
+
+                        <!-- Highlights & badges -->
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-1 text-left">
+                            <div class="p-3.5 bg-white/80 rounded-2xl border border-pinkmed-100 shadow-sm flex items-center gap-2.5">
+                                <div class="w-8 h-8 rounded-xl bg-pinkmed-100 text-pinkmed-700 flex items-center justify-center text-sm font-bold">
+                                    <i class="fa-solid fa-shield-halved"></i>
+                                </div>
+                                <span class="text-xs font-bold text-slate-800">Privacidad HIPAA</span>
+                            </div>
+                            <div class="p-3.5 bg-white/80 rounded-2xl border border-pinkmed-100 shadow-sm flex items-center gap-2.5">
+                                <div class="w-8 h-8 rounded-xl bg-pinkmed-100 text-pinkmed-700 flex items-center justify-center text-sm font-bold">
+                                    <i class="fa-solid fa-clock-rotate-left"></i>
+                                </div>
+                                <span class="text-xs font-bold text-slate-800">Optimización Agendas</span>
+                            </div>
+                            <div class="p-3.5 bg-white/80 rounded-2xl border border-pinkmed-100 shadow-sm flex items-center gap-2.5 col-span-2 sm:col-span-1">
+                                <div class="w-8 h-8 rounded-xl bg-pinkmed-100 text-pinkmed-700 flex items-center justify-center text-sm font-bold">
+                                    <i class="fa-solid fa-hand-holding-heart"></i>
+                                </div>
+                                <span class="text-xs font-bold text-slate-800">Atención Cálida</span>
+                            </div>
+                        </div>
+
+                        <!-- Action buttons -->
+                        <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+                            <a href="#agenda" class="bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-bold px-6 py-3.5 rounded-2xl shadow-md transition flex items-center gap-2">
+                                <i class="fa-solid fa-list-check text-pinkmed-300"></i> Ver Agendas del Día
+                            </a>
+                            <button onclick="openModal()" class="bg-white hover:bg-pinkmed-50 text-pinkmed-800 border border-pinkmed-200 text-xs sm:text-sm font-bold px-6 py-3.5 rounded-2xl shadow-sm transition flex items-center gap-2">
+                                <i class="fa-solid fa-user-plus text-pinkmed-600"></i> Registrar Paciente
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Photo Presentation Column -->
+                    <div class="lg:col-span-5 flex justify-center">
+                        <div class="relative group">
+                            <!-- Pink Glow Frame -->
+                            <div class="absolute -inset-2 bg-gradient-to-tr from-pinkmed-600 via-pinkmed-400 to-rosegold-400 rounded-3xl blur-xl opacity-50 group-hover:opacity-80 transition duration-500"></div>
+
+                            <!-- Photo Container Card -->
+                            <div class="relative bg-white p-4 sm:p-5 rounded-3xl shadow-2xl border border-pinkmed-200 max-w-sm sm:max-w-md">
+                                <div class="relative rounded-2xl overflow-hidden shadow-inner border-2 border-pinkmed-100">
+                                    <img src="154AC231-037B-4F94-A803-C52EFFF399EE.PNG" 
+                                         alt="Auxiliar Administrativo de Oficina Médica" 
+                                         class="w-full h-auto object-cover transform group-hover:scale-105 transition duration-500"
+                                         onerror="this.onerror=null; this.src='https://placehold.co/400x500/fbcfe8/be185d?text=Auxiliar+Medica';">
+                                    
+                                    <div class="absolute top-3 left-3 bg-pinkmed-900/80 backdrop-blur-md text-white text-[10px] font-extrabold px-3 py-1 rounded-full border border-pinkmed-300 flex items-center gap-1.5 shadow-md">
+                                        <i class="fa-solid fa-circle-check text-emerald-400"></i> Auxiliar Certificada
+                                    </div>
+
+                                    <div class="absolute bottom-3 left-3 right-3 bg-slate-900/85 backdrop-blur-md text-white p-3.5 rounded-2xl border border-white/20 flex items-center justify-between shadow-lg">
+                                        <div>
+                                            <p class="font-extrabold text-xs text-white">Coordinación de Consultorio</p>
+                                            <p class="text-[10px] text-pinkmed-200">Disponible para Gestión Sanitaria</p>
+                                        </div>
+                                        <span class="flex h-3 w-3 relative">
+                                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-pinkmed-400 opacity-75"></span>
+                                          <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-400"></span>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="mt-4 pt-3 border-t border-pinkmed-100 grid grid-cols-2 gap-2 text-xs">
+                                    <div class="bg-pinkmed-50/60 p-2.5 rounded-xl border border-pinkmed-100">
+                                        <span class="text-[10px] font-bold text-slate-500 uppercase block">Especialidad</span>
+                                        <span class="font-extrabold text-pinkmed-800 text-xs">Agendas Médicas</span>
+                                    </div>
+                                    <div class="bg-pinkmed-50/60 p-2.5 rounded-xl border border-pinkmed-100">
+                                        <span class="text-[10px] font-bold text-slate-500 uppercase block">Atención</span>
+                                        <span class="font-extrabold text-pinkmed-800 text-xs">100% Calidez & Orden</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section id="mision-vision" class="py-16 bg-white border-b border-pinkmed-100 relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center max-w-2xl mx-auto mb-12">
+                    <span class="px-3.5 py-1.5 bg-pinkmed-100 text-pinkmed-800 rounded-full text-xs font-extrabold uppercase tracking-wider">
+                        Filosofía Operativa
+                    </span>
+                    <h2 class="text-3xl font-extrabold text-slate-900 mt-3">Misión, Visión & Valores</h2>
+                    <p class="text-xs sm:text-sm text-slate-600 mt-2">
+                        El compromiso ético y profesional que guía cada interacción administrativa en el entorno médico.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Card Misión -->
+                    <div class="bg-gradient-to-br from-pinkmed-50/80 to-white p-7 rounded-3xl border border-pinkmed-200 shadow-sm hover:shadow-md transition">
+                        <div class="w-12 h-12 rounded-2xl bg-pinkmed-600 text-white flex items-center justify-center text-xl mb-5 shadow-md shadow-pinkmed-600/30">
+                            <i class="fa-solid fa-bullseye"></i>
+                        </div>
+                        <h3 class="text-xl font-black text-slate-900 mb-3">Nuestra Misión</h3>
+                        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                            Ofrecer un servicio administrativo cálido, eficiente y riguroso que optimice el tiempo de los especialistas médicos y garantice una experiencia agilizada, ordenada y verdaderamente humana para cada paciente desde su primer contacto.
+                        </p>
+                    </div>
+
+                    <!-- Card Visión -->
+                    <div class="bg-gradient-to-br from-rosegold-100/60 to-white p-7 rounded-3xl border border-pinkmed-200 shadow-sm hover:shadow-md transition">
+                        <div class="w-12 h-12 rounded-2xl bg-pinkmed-800 text-white flex items-center justify-center text-xl mb-5 shadow-md shadow-pinkmed-800/30">
+                            <i class="fa-solid fa-eye"></i>
+                        </div>
+                        <h3 class="text-xl font-black text-slate-900 mb-3">Nuestra Visión</h3>
+                        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                            Ser el pilar de excelencia operativa en el sector de salud, modernizando la gestión digital de agendamiento, promoviendo la máxima puntualidad y reduciendo a cero las inasistencias no notificadas en la consulta médica.
+                        </p>
+                    </div>
+
+                    <!-- Card Valores -->
+                    <div class="bg-gradient-to-br from-pinkmed-50/80 to-white p-7 rounded-3xl border border-pinkmed-200 shadow-sm hover:shadow-md transition md:col-span-2 lg:col-span-1">
+                        <div class="w-12 h-12 rounded-2xl bg-pinkmed-700 text-white flex items-center justify-center text-xl mb-5 shadow-md shadow-pinkmed-700/30">
+                            <i class="fa-solid fa-heart-pulse"></i>
+                        </div>
+                        <h3 class="text-xl font-black text-slate-900 mb-3">Valores Fundamentales</h3>
+                        <ul class="space-y-2.5 text-xs sm:text-sm text-slate-700 font-medium">
+                            <li class="flex items-center gap-2">
+                                <i class="fa-solid fa-circle-check text-pinkmed-600"></i>
+                                <span><strong>Empatía Sanitaria:</strong> Trato digno y sensible.</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fa-solid fa-circle-check text-pinkmed-600"></i>
+                                <span><strong>Confidencialidad:</strong> Rigor HIPAA y protección de datos.</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fa-solid fa-circle-check text-pinkmed-600"></i>
+                                <span><strong>Eficiencia Operativa:</strong> Cero solapamiento de turnos.</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fa-solid fa-circle-check text-pinkmed-600"></i>
+                                <span><strong>Puntualidad & Calidez:</strong> Respeto absoluto al tiempo del paciente.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="dashboard" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div class="mb-6">
+                <h2 class="text-xl font-extrabold text-slate-900">Métricas Operativas de Hoy</h2>
+                <p class="text-xs text-slate-500">Resumen dinámico del flujo de pacientes en el consultorio</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                <!-- Stat Card 1 -->
+                <div class="bg-white p-5 rounded-3xl border border-pinkmed-100 shadow-md hover:shadow-lg transition group">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Citas</p>
+                            <h3 id="stat-total" class="text-3xl font-black text-slate-900 mt-1">0</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-2xl bg-pinkmed-50 text-pinkmed-600 flex items-center justify-center text-xl group-hover:bg-pinkmed-600 group-hover:text-white transition duration-300">
+                            <i class="fa-regular fa-calendar-days"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3 flex items-center gap-1.5 text-xs text-pinkmed-700 font-semibold">
+                        <i class="fa-solid fa-hospital-user"></i>
+                        <span>Citas registradas hoy</span>
+                    </div>
+                </div>
+
+                <!-- Stat Card 2 -->
+                <div class="bg-white p-5 rounded-3xl border border-pinkmed-100 shadow-md hover:shadow-lg transition group">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Confirmadas</p>
+                            <h3 id="stat-confirmadas" class="text-3xl font-black text-emerald-600 mt-1">0</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl group-hover:bg-emerald-600 group-hover:text-white transition duration-300">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3 flex items-center gap-1.5 text-xs text-emerald-700 font-semibold">
+                        <i class="fa-solid fa-bell"></i>
+                        <span>Asistencia verificada</span>
+                    </div>
+                </div>
+
+                <!-- Stat Card 3 -->
+                <div class="bg-white p-5 rounded-3xl border border-pinkmed-100 shadow-md hover:shadow-lg transition group">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Pendientes</p>
+                            <h3 id="stat-pendientes" class="text-3xl font-black text-amber-500 mt-1">0</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-500 flex items-center justify-center text-xl group-hover:bg-amber-500 group-hover:text-white transition duration-300">
+                            <i class="fa-solid fa-hourglass-half"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3 flex items-center gap-1.5 text-xs text-amber-700 font-semibold">
+                        <i class="fa-solid fa-phone"></i>
+                        <span>Requieren llamada</span>
+                    </div>
+                </div>
+
+                <!-- Stat Card 4 -->
+                <div class="bg-white p-5 rounded-3xl border border-pinkmed-100 shadow-md hover:shadow-lg transition group">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Atendidas</p>
+                            <h3 id="stat-atendidas" class="text-3xl font-black text-pinkmed-700 mt-1">0</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-2xl bg-pinkmed-100 text-pinkmed-700 flex items-center justify-center text-xl group-hover:bg-pinkmed-700 group-hover:text-white transition duration-300">
+                            <i class="fa-solid fa-user-check"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3 flex items-center gap-1.5 text-xs text-pinkmed-800 font-semibold">
+                        <i class="fa-solid fa-notes-medical"></i>
+                        <span>Consulta completada</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="agenda" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="bg-white rounded-3xl border border-pinkmed-200 shadow-xl overflow-hidden">
+                
+                <!-- Table Header with Search & Filters -->
+                <div class="p-6 bg-gradient-to-r from-pinkmed-50/90 via-white to-pinkmed-50/50 border-b border-pinkmed-100 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-pinkmed-600 animate-pulse"></span>
+                            <h2 class="text-xl font-bold text-slate-900">Gestor de Agendas Médicas</h2>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-0.5">Control interactivo de turnos, estados y notificaciones de pacientes</p>
+                    </div>
+
+                    <!-- Search and Filter Controls -->
+                    <div class="flex flex-wrap items-center gap-3">
+                        <!-- Search Box -->
+                        <div class="relative flex-grow sm:flex-grow-0">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-pinkmed-400 text-xs"></i>
+                            <input type="text" id="searchInput" placeholder="Buscar por paciente o teléfono..." class="pl-9 pr-3 py-2.5 bg-white border border-pinkmed-200 rounded-xl text-xs w-full sm:w-60 focus:outline-none focus:ring-2 focus:ring-pinkmed-500 shadow-sm">
+                        </div>
+
+                        <!-- Doctor Filter -->
+                        <select id="doctorFilter" class="bg-white border border-pinkmed-200 text-slate-700 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-pinkmed-500 font-medium shadow-sm">
+                            <option value="todos">👩‍⚕️ Todas las Especialidades</option>
+                            <option value="Dra. Sofía Valenzuela">Dra. Sofía Valenzuela (Ginecología)</option>
+                            <option value="Dr. Alejandro Sanz">Dr. Alejandro Sanz (Med. General)</option>
+                            <option value="Dra. Camila Torres">Dra. Camila Torres (Pediatría)</option>
+                        </select>
+
+                        <!-- Status Filter -->
+                        <select id="statusFilter" class="bg-white border border-pinkmed-200 text-slate-700 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-pinkmed-500 font-medium shadow-sm">
+                            <option value="todos">📌 Todos los Estados</option>
+                            <option value="Confirmada">Confirmadas</option>
+                            <option value="Pendiente">Pendientes</option>
+                            <option value="Atendida">Atendidas</option>
+                            <option value="Cancelada">Canceladas</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Appointments Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-pinkmed-50/60 border-b border-pinkmed-100 text-[11px] font-extrabold text-pinkmed-900 uppercase tracking-wider">
+                                <th class="py-4 px-5">Hora</th>
+                                <th class="py-4 px-5">Paciente / Teléfono</th>
+                                <th class="py-4 px-5">Especialista / Consulta</th>
+                                <th class="py-4 px-5">Tipo Cita</th>
+                                <th class="py-4 px-5">Estado</th>
+                                <th class="py-4 px-5 text-right">Acciones Administrativas</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appointmentTableBody" class="divide-y divide-pinkmed-50 text-xs text-slate-700">
+                            <!-- Dynamic rows injected via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Empty State -->
+                <div id="noResults" class="hidden p-12 text-center">
+                    <div class="w-16 h-16 rounded-full bg-pinkmed-50 text-pinkmed-400 flex items-center justify-center text-2xl mx-auto mb-3">
+                        <i class="fa-solid fa-calendar-xmark"></i>
+                    </div>
+                    <h4 class="text-base font-bold text-slate-800">No hay citas registradas</h4>
+                    <p class="text-xs text-slate-500 mt-1">Intenta ajustando los filtros de búsqueda o agrega un nuevo registro.</p>
+                </div>
+
+                <!-- Footer Table Info -->
+                <div class="p-4 bg-slate-50 border-t border-pinkmed-100 text-xs text-slate-500 flex flex-col sm:flex-row justify-between items-center gap-2">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-shield-halved text-pinkmed-500"></i>
+                        <span>Gestión conforme a la confidencialidad del expediente clínico.</span>
+                    </div>
+                    <div id="totalCounterText" class="font-bold text-pinkmed-800">
+                        Mostrando citas de la jornada
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="servicios" class="bg-gradient-to-b from-white via-pinkmed-50/40 to-rose-50/30 py-16 border-t border-pinkmed-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center max-w-2xl mx-auto mb-12">
+                    <span class="px-3.5 py-1.5 bg-pinkmed-100 text-pinkmed-800 rounded-full text-xs font-extrabold uppercase tracking-wider">
+                        Competencias Profesionales
+                    </span>
+                    <h2 class="text-3xl font-extrabold text-slate-900 mt-3">Servicios Administrativos Médicos</h2>
+                    <p class="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
+                        Soluciones organizativas de alta calidad para optimizar la rentabilidad y el ambiente en consultorios médicos.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Service 1 -->
+                    <div class="bg-white p-6 rounded-3xl border border-pinkmed-100 shadow-md hover:shadow-xl hover:border-pinkmed-300 transition duration-300 group">
+                        <div class="w-12 h-12 rounded-2xl bg-pinkmed-100 text-pinkmed-700 flex items-center justify-center text-xl mb-4 group-hover:bg-pinkmed-600 group-hover:text-white transition duration-300 shadow-sm">
+                            <i class="fa-solid fa-calendar-days"></i>
+                        </div>
+                        <h3 class="font-extrabold text-slate-900 text-base mb-2">Programación & Agendas</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Organización eficiente de turnos médicos presenciales y teleconsultas, reduciendo tiempos de espera y cancelaciones de último momento.
+                        </p>
+                    </div>
+
+                    <!-- Service 2 -->
+                    <div class="bg-white p-6 rounded-3xl border border-pinkmed-100 shadow-md hover:shadow-xl hover:border-pinkmed-300 transition duration-300 group">
+                        <div class="w-12 h-12 rounded-2xl bg-pinkmed-100 text-pinkmed-700 flex items-center justify-center text-xl mb-4 group-hover:bg-pinkmed-600 group-hover:text-white transition duration-300 shadow-sm">
+                            <i class="fa-solid fa-file-invoice-dollar"></i>
+                        </div>
+                        <h3 class="font-extrabold text-slate-900 text-base mb-2">Verificación de Seguros & Cobros</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Confirmación de coberturas médicas, gestión de copagos, facturación básica y conciliación de servicios prestados.
+                        </p>
+                    </div>
+
+                    <!-- Service 3 -->
+                    <div class="bg-white p-6 rounded-3xl border border-pinkmed-100 shadow-md hover:shadow-xl hover:border-pinkmed-300 transition duration-300 group">
+                        <div class="w-12 h-12 rounded-2xl bg-pinkmed-100 text-pinkmed-700 flex items-center justify-center text-xl mb-4 group-hover:bg-pinkmed-600 group-hover:text-white transition duration-300 shadow-sm">
+                            <i class="fa-solid fa-comment-dots"></i>
+                        </div>
+                        <h3 class="font-extrabold text-slate-900 text-base mb-2">Recordatorios Automatizados</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Notificación previa vía WhatsApp o llamada telefónica para garantizar la puntualidad y confirmación de asistencia.
+                        </p>
+                    </div>
+
+                    <!-- Service 4 -->
+                    <div class="bg-white p-6 rounded-3xl border border-pinkmed-100 shadow-md hover:shadow-xl hover:border-pinkmed-300 transition duration-300 group">
+                        <div class="w-12 h-12 rounded-2xl bg-pinkmed-100 text-pinkmed-700 flex items-center justify-center text-xl mb-4 group-hover:bg-pinkmed-600 group-hover:text-white transition duration-300 shadow-sm">
+                            <i class="fa-solid fa-hospital-user"></i>
+                        </div>
+                        <h3 class="font-extrabold text-slate-900 text-base mb-2">Triaje de Recepción</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Recepción humana y toma inicial de datos para categorizar la urgencia de la consulta y orientar al paciente adecuadamente.
+                        </p>
+                    </div>
+
+                    <!-- Service 5 -->
+                    <div class="bg-white p-6 rounded-3xl border border-pinkmed-100 shadow-md hover:shadow-xl hover:border-pinkmed-300 transition duration-300 group">
+                        <div class="w-12 h-12 rounded-2xl bg-pinkmed-100 text-pinkmed-700 flex items-center justify-center text-xl mb-4 group-hover:bg-pinkmed-600 group-hover:text-white transition duration-300 shadow-sm">
+                            <i class="fa-solid fa-box-archive"></i>
+                        </div>
+                        <h3 class="font-extrabold text-slate-900 text-base mb-2">Expedientes Clínicos (EHR)</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Apertura, digitalización y resguardo confidencial de fichas médicas bajo regulaciones sanitarias de privacidad.
+                        </p>
+                    </div>
+
+                    <!-- Service 6 -->
+                    <div class="bg-white p-6 rounded-3xl border border-pinkmed-100 shadow-md hover:shadow-xl hover:border-pinkmed-300 transition duration-300 group">
+                        <div class="w-12 h-12 rounded-2xl bg-pinkmed-100 text-pinkmed-700 flex items-center justify-center text-xl mb-4 group-hover:bg-pinkmed-600 group-hover:text-white transition duration-300 shadow-sm">
+                            <i class="fa-solid fa-headset"></i>
+                        </div>
+                        <h3 class="font-extrabold text-slate-900 text-base mb-2">Atención Telefónica & Call Center</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Gestión proactiva de llamadas entrantes y salientes con un trato afable, resolutivo y profesional.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="contacto" class="py-16 bg-white">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="bg-gradient-to-br from-pinkmed-900 via-pinkmed-800 to-slate-900 rounded-3xl p-8 sm:p-12 text-white shadow-2xl relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 w-60 h-60 bg-pinkmed-500/20 rounded-full blur-2xl"></div>
+
+                    <div class="grid md:grid-cols-2 gap-8 items-center relative z-10">
+                        <div>
+                            <span class="px-3 py-1 bg-pinkmed-700 text-pinkmed-100 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                                Contacto Directo
+                            </span>
+                            <h2 class="text-2xl sm:text-3xl font-black mt-3">¿Necesita Optimizar su Consultorio Médico?</h2>
+                            <p class="text-xs sm:text-sm text-pinkmed-100/80 mt-2 leading-relaxed">
+                                Solicite mis servicios de Auxiliar Administrativa para la coordinación y gestión profesional de sus agendas médicas.
+                            </p>
+
+                            <div class="mt-6 space-y-3 text-xs">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center text-pinkmed-300">
+                                        <i class="fa-solid fa-envelope"></i>
+                                    </div>
+                                    <span>contacto.auxiliar@medagenda.com</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center text-pinkmed-300">
+                                        <i class="fa-solid fa-phone"></i>
+                                    </div>
+                                    <span>+34 600 123 456 / Oficina Médica</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center text-pinkmed-300">
+                                        <i class="fa-solid fa-location-dot"></i>
+                                    </div>
+                                    <span>Centro Médico / Servicio Presencial y Remoto</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mini Contact Form -->
+                        <form onsubmit="handleContactSubmit(event)" class="bg-white text-slate-800 p-6 rounded-2xl space-y-3.5 shadow-lg">
+                            <h3 class="font-bold text-sm text-pinkmed-900">Solicitar Información de Servicio</h3>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-700 mb-1">Nombre o Clínica *</label>
+                                <input type="text" required placeholder="Ej: Dr. Ramírez / Clínica Salud" class="w-full px-3 py-2 bg-slate-50 border border-pinkmed-200 rounded-xl text-xs focus:ring-2 focus:ring-pinkmed-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-700 mb-1">Correo Electrónico *</label>
+                                <input type="email" required placeholder="doctor@ejemplo.com" class="w-full px-3 py-2 bg-slate-50 border border-pinkmed-200 rounded-xl text-xs focus:ring-2 focus:ring-pinkmed-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-700 mb-1">Mensaje / Requerimiento *</label>
+                                <textarea rows="2" required placeholder="Escriba aquí los detalles..." class="w-full px-3 py-2 bg-slate-50 border border-pinkmed-200 rounded-xl text-xs focus:ring-2 focus:ring-pinkmed-500 focus:outline-none"></textarea>
+                            </div>
+                            <button type="submit" class="w-full py-2.5 bg-pinkmed-700 hover:bg-pinkmed-800 text-white font-bold rounded-xl text-xs transition shadow-md">
+                                Send Request
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-10 border-t border-slate-800 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <!-- Branding -->
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-pinkmed-600 flex items-center justify-center text-white font-bold text-lg">
+                        <i class="fa-solid fa-notes-medical"></i>
+                    </div>
+                    <div>
+                        <span class="text-white font-bold text-sm tracking-wide">Agenda Médica Rosa Pro</span>
+                        <p class="text-[11px] text-slate-500">Auxiliar Administrativo de Oficina Médica</p>
+                    </div>
+                </div>
+
+                <!-- Socials -->
+                <div class="flex items-center gap-5 text-sm">
+                    <a href="javascript:void(0)" class="hover:text-pinkmed-400 transition"><i class="fa-brands fa-whatsapp"></i></a>
+                    <a href="javascript:void(0)" class="hover:text-pinkmed-400 transition"><i class="fa-regular fa-envelope"></i></a>
+                    <a href="javascript:void(0)" class="hover:text-pinkmed-400 transition"><i class="fa-brands fa-linkedin"></i></a>
+                </div>
+
+                <!-- Copyright -->
+                <p class="text-slate-500 text-center md:text-right text-[11px]">
+                    © 2026 Todos los derechos reservados. Diseñado para gestión en salud.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <div id="appointmentModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden border border-pinkmed-200 animate-fadeIn">
+            
+            <!-- Modal Header -->
+            <div class="bg-gradient-to-r from-pinkmed-700 via-pinkmed-600 to-pinkmed-800 text-white px-6 py-5 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-white">
+                        <i class="fa-solid fa-calendar-plus text-base"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-base">Agendar Cita Médica</h3>
+                        <p class="text-[10px] text-pinkmed-100">Ingrese los datos del paciente para registrar en agenda</p>
+                    </div>
+                </div>
+                <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Form -->
+            <form id="appointmentForm" onsubmit="handleFormSubmit(event)" class="p-6 space-y-3.5">
+                <div class="grid grid-cols-2 gap-3.5">
+                    <div class="col-span-2 sm:col-span-1">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Nombre del Paciente *</label>
+                        <input type="text" id="patientName" required placeholder="Ej: Maria Lopez" class="w-full px-3 py-2 bg-slate-50 border border-pinkmed-200 rounded-xl text-xs focus:ring-2 focus:ring-pinkmed-500 focus:outline-none">
+                    </div>
+                    <div class="col-span-2 sm:col-span-1">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Teléfono de Contacto *</label>
+                        <input type="tel" id="patientPhone" required placeholder="Ej: +34 600 111 222" class="w-full px-3 py-2 bg-slate-50 border border-pinkmed-200 rounded-xl text-xs focus:ring-2 focus:ring-pinkmed-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3.5">
+                    <div class="col-span-2 sm:col-span-1">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Médico Especialista *</label>
+                        <select id="doctorSelect" required class="w-full px-3 py-2 bg-slate-50 border border-pinkmed-200 rounded-xl text-xs focus:ring-2 focus:ring-pinkmed-500 focus:outline-none font-medium">
+                            <option value="">Seleccionar Especialista</option>
+                            <option value="Dra. Sofía Valenzuela">Dra. Sofía Valenzuela (Ginecología)</option>
+                            <option value="Dr. Alejandro Sanz">Dr. Alejandro Sanz (Med. General)</option>
+                            <option value="Dra. Camila Torres">Dra. Camila Torres (Pediatría)</option>
+                        </select>
+                    </div>
+                    <div class="col-span-2 sm:col-span-1">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Tipo de Cita *</label>
+                        <select id="typeSelect" required class="w-full px-3 py-2 bg-slate-50 border border-pinkmed-200 rounded-xl text-xs focus:ring-2 focus:ring-pinkmed-500 focus:outline-none">
+                            <option value="General">Consulta General</option>
+                            <option value="Especializada">Consulta Especializada</option>
+                            <option value="Seguimiento">Control / Seguimiento</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3.5">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Hora de Cita *</label>
+                        <input type="time" id="appointmentTime" required class="w-full px-3 py-2 bg-slate-50 border border-pinkmed-200 rounded-xl text-xs focus:ring-2 focus:ring-pinkmed-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Estado Inicial</label>
+                        <select id="statusSelect" class="w-full px-3 py-2 bg-slate-50 border border-pinkmed-200 rounded-xl text-xs focus:ring-2 focus:ring-pinkmed-500 focus:outline-none font-medium">
+                            <option value="Confirmada">Confirmada</option>
+                            <option value="Pendiente" selected>Pendiente</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-3 border-t border-pinkmed-100">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 border border-slate-200 text-slate-600 rounded-xl text-xs font-bold hover:bg-slate-100 transition">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="px-5 py-2 bg-pinkmed-600 hover:bg-pinkmed-700 text-white rounded-xl text-xs font-bold shadow-md shadow-pinkmed-600/30 transition flex items-center gap-2">
+                        <i class="fa-solid fa-floppy-disk"></i> Guardar Cita
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Sample Initial Appointments Data
+        let appointments = [
+            {
+                id: '1',
+                time: '08:30',
+                patient: 'Valeria Ríos',
+                phone: '+34 611 223 344',
+                doctor: 'Dra. Sofía Valenzuela',
+                type: 'Especializada',
+                status: 'Confirmada'
+            },
+            {
+                id: '2',
+                time: '09:15',
+                patient: 'Mateo Fernández',
+                phone: '+34 622 334 455',
+                doctor: 'Dra. Camila Torres',
+                type: 'Seguimiento',
+                status: 'Atendida'
+            },
+            {
+                id: '3',
+                time: '10:00',
+                patient: 'Isabel Salazar',
+                phone: '+34 633 445 566',
+                doctor: 'Dr. Alejandro Sanz',
+                type: 'General',
+                status: 'Pendiente'
+            },
+            {
+                id: '4',
+                time: '11:00',
+                patient: 'Lucía Morales',
+                phone: '+34 644 556 677',
+                doctor: 'Dra. Sofía Valenzuela',
+                type: 'Especializada',
+                status: 'Confirmada'
+            },
+            {
+                id: '5',
+                time: '12:15',
+                patient: 'Carlos Delgado',
+                phone: '+34 655 667 788',
+                doctor: 'Dr. Alejandro Sanz',
+                type: 'General',
+                status: 'Cancelada'
+            }
+        ];
+
+        // On DOM Loaded Initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTable();
+            updateStats();
+
+            // Event Listeners for Filters
+            document.getElementById('searchInput').addEventListener('input', renderTable);
+            document.getElementById('doctorFilter').addEventListener('change', renderTable);
+            document.getElementById('statusFilter').addEventListener('change', renderTable);
+        });
+
+        // Modal Handlers
+        function openModal() {
+            document.getElementById('appointmentModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('appointmentModal').classList.add('hidden');
+            document.getElementById('appointmentForm').reset();
+        }
+
+        // Table Rendering Engine
+        function renderTable() {
+            const tbody = document.getElementById('appointmentTableBody');
+            const searchValue = document.getElementById('searchInput').value.toLowerCase();
+            const doctorValue = document.getElementById('doctorFilter').value;
+            const statusValue = document.getElementById('statusFilter').value;
+
+            // Filter logic
+            const filtered = appointments.filter(app => {
+                const matchesSearch = app.patient.toLowerCase().includes(searchValue) || app.phone.includes(searchValue);
+                const matchesDoctor = doctorValue === 'todos' || app.doctor === doctorValue;
+                const matchesStatus = statusValue === 'todos' || app.status === statusValue;
+                return matchesSearch && matchesDoctor && matchesStatus;
+            });
+
+            // Sort by time
+            filtered.sort((a, b) => a.time.localeCompare(b.time));
+
+            tbody.innerHTML = '';
+
+            if (filtered.length === 0) {
+                document.getElementById('noResults').classList.remove('hidden');
+            } else {
+                document.getElementById('noResults').classList.add('hidden');
+
+                filtered.forEach(app => {
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-pinkmed-50/50 transition border-b border-pinkmed-100/60';
+
+                    // Status Badge Styling
+                    let statusBadge = '';
+                    switch (app.status) {
+                        case 'Confirmada':
+                            statusBadge = `<span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-full font-bold text-[10px] inline-flex items-center gap-1 shadow-sm"><i class="fa-solid fa-circle text-[6px]"></i> Confirmada</span>`;
+                            break;
+                        case 'Pendiente':
+                            statusBadge = `<span class="px-2.5 py-1 bg-amber-100 text-amber-800 rounded-full font-bold text-[10px] inline-flex items-center gap-1 shadow-sm"><i class="fa-solid fa-clock text-[9px]"></i> Pendiente</span>`;
+                            break;
+                        case 'Atendida':
+                            statusBadge = `<span class="px-2.5 py-1 bg-pinkmed-100 text-pinkmed-800 rounded-full font-bold text-[10px] inline-flex items-center gap-1 shadow-sm"><i class="fa-solid fa-check text-[9px]"></i> Atendida</span>`;
+                            break;
+                        case 'Cancelada':
+                            statusBadge = `<span class="px-2.5 py-1 bg-rose-100 text-rose-800 rounded-full font-bold text-[10px] inline-flex items-center gap-1 shadow-sm"><i class="fa-solid fa-xmark text-[9px]"></i> Cancelada</span>`;
+                            break;
+                    }
+
+                    row.innerHTML = `
+                        <td class="py-3.5 px-5 font-extrabold text-slate-800">
+                            <span class="inline-flex items-center gap-1 bg-pinkmed-50 text-pinkmed-800 px-2 py-1 rounded-lg border border-pinkmed-100">
+                                <i class="fa-regular fa-clock text-pinkmed-500"></i> ${app.time}
+                            </span>
+                        </td>
+                        <td class="py-3.5 px-5">
+                            <div class="font-bold text-slate-900">${app.patient}</div>
+                            <div class="text-[10px] text-slate-500"><i class="fa-solid fa-phone text-pinkmed-400"></i> ${app.phone}</div>
+                        </td>
+                        <td class="py-3.5 px-5 font-semibold text-slate-700">${app.doctor}</td>
+                        <td class="py-3.5 px-5">
+                            <span class="px-2.5 py-1 bg-slate-100 text-slate-700 rounded-md text-[11px] font-medium">${app.type}</span>
+                        </td>
+                        <td class="py-3.5 px-5">${statusBadge}</td>
+                        <td class="py-3.5 px-5 text-right">
+                            <div class="inline-flex items-center gap-1">
+                                ${app.status !== 'Atendida' ? `
+                                    <button onclick="changeStatus('${app.id}', 'Atendida')" title="Marcar Atendida" class="p-1.5 hover:bg-pinkmed-100 text-pinkmed-700 rounded-lg transition">
+                                        <i class="fa-solid fa-user-check"></i>
+                                    </button>
+                                ` : ''}
+                                ${app.status === 'Pendiente' ? `
+                                    <button onclick="changeStatus('${app.id}', 'Confirmada')" title="Confirmar Cita" class="p-1.5 hover:bg-emerald-100 text-emerald-700 rounded-lg transition">
+                                        <i class="fa-solid fa-circle-check"></i>
+                                    </button>
+                                ` : ''}
+                                ${app.status !== 'Cancelada' ? `
+                                    <button onclick="changeStatus('${app.id}', 'Cancelada')" title="Cancelar Cita" class="p-1.5 hover:bg-rose-100 text-rose-700 rounded-lg transition">
+                                        <i class="fa-solid fa-ban"></i>
+                                    </button>
+                                ` : ''}
+                                <button onclick="deleteAppointment('${app.id}')" title="Eliminar Registro" class="p-1.5 hover:bg-slate-200 text-slate-400 hover:text-slate-700 rounded-lg transition">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+
+            document.getElementById('totalCounterText').innerText = `Mostrando ${filtered.length} de ${appointments.length} citas registradas`;
+        }
+
+        // Change Appointment Status
+        function changeStatus(id, newStatus) {
+            appointments = appointments.map(app => app.id === id ? { ...app, status: newStatus } : app);
+            renderTable();
+            updateStats();
+        }
+
+        // Delete Appointment
+        function deleteAppointment(id) {
+            appointments = appointments.filter(app => app.id !== id);
+            renderTable();
+            updateStats();
+        }
+
+        // Create New Appointment
+        function handleFormSubmit(e) {
+            e.preventDefault();
+
+            const newApp = {
+                id: Date.now().toString(),
+                patient: document.getElementById('patientName').value,
+                phone: document.getElementById('patientPhone').value,
+                doctor: document.getElementById('doctorSelect').value,
+                type: document.getElementById('typeSelect').value,
+                time: document.getElementById('appointmentTime').value,
+                status: document.getElementById('statusSelect').value
+            };
+
+            appointments.push(newApp);
+            renderTable();
+            updateStats();
+            closeModal();
+        }
+
+        // Recalculate Dashboard Statistics
+        function updateStats() {
+            const total = appointments.length;
+            const confirmadas = appointments.filter(a => a.status === 'Confirmada').length;
+            const pendientes = appointments.filter(a => a.status === 'Pendiente').length;
+            const atendidas = appointments.filter(a => a.status === 'Atendida').length;
+
+            document.getElementById('stat-total').innerText = total;
+            document.getElementById('stat-confirmadas').innerText = confirmadas;
+            document.getElementById('stat-pendientes').innerText = pendientes;
+            document.getElementById('stat-atendidas').innerText = atendidas;
+        }
+
+        // Mock Contact Handler
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            alert('¡Gracias por su mensaje! Su solicitud ha sido registrada correctamente.');
+            e.target.reset();
+        }
+    </script>
+</body>
+</html>
